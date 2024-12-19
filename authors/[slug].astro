@@ -1,0 +1,81 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import BlogCard from "../../components/BlogCard.astro";
+import { getPostsByAuthor, getAllAuthors, getAuthorBySlug } from "../../services/notion";
+
+// Add getStaticPaths function
+export async function getStaticPaths() {
+  const authors = await getAllAuthors();
+  const mappedAuthors = await Promise.all(
+    authors.map(async (author) => {
+      return {
+        params: { slug: author.slug },
+        props: { author: fullAuthor },
+      };
+    })
+  );
+  return mappedAuthors;
+}
+
+// Get the author data from props
+const { author } = Astro.props;
+
+if (!author) {
+  Astro.redirect("/404");
+}
+---
+
+<Layout>
+  <main class="container mx-auto px-4 py-8">
+    {author ? (
+      <section
+        class="py-8 md:py-12 bg-white"
+        style={{
+          backgroundImage: "url(/images/pattern-white.svg)",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center top",
+        }}>
+        <div class="container px-4 mx-auto">
+          <div
+            class="mx-auto flex flex-col md:flex-row justify-between md:items-center mb-12">
+            <div
+              class="text-center md:text-left order-2 md:order-1 w-full md:max-w-lg px-4">
+              <h1
+                class="mb-4 text-4xl md:text-5xl lg:text-8xl leading-tight text-darkCoolGray-900 font-bold tracking-tighter">
+                {author.name}
+              </h1>
+              <p
+                class="block mb-6 md:mb-8 text-md md:text-lg font-normal text-coolGray-500">
+                {author.bio}
+              </p>
+            </div>
+
+            <div
+              class="order-1 md:order-2 w-fit md:w-1/2 2xl:w-5/12 px-4 mb-8 md:mb-0">
+              {
+                author.image[0] && (
+                  <div class="mx-auto md:ml-0 max-w-max overflow-hidden shadown-md md:shadow-xl rounded-lg">
+                    <img
+                      width={800}
+                      height={800}
+                      src={author.image[0]}
+                      class="max-h-[500px] w-auto"
+                      alt="Author Picture"
+                    />
+                  </div>
+                )
+              }
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="px-5 md:text-left text-center md:px-16 grid grid-cols-1 md:grid-cols-3 gap-y-12 md:gap-y-20 gap-x-10 -m-3">
+          {postList.map((post) => <BlogCard blog={post} />)}
+        </div>
+      </section>
+    ) : (
+      <p>Author not found.</p>
+    )}
+  </main>
+</Layout>
