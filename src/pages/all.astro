@@ -1,0 +1,30 @@
+---
+import BlogCard from "../components/BlogCard.astro";
+import { getAllPosts } from "../services/notion";
+import Layout from "../layouts/Layout.astro";
+
+const pageName = "Manuscript AI";
+const description =
+  "Write smarter, not harder with our AI-powered writing assistant. Elevate your writing game and save time with every keystroke.";
+const blogs = await getAllPosts();
+---
+
+<Layout>
+  <section class="pt-12 pb-24 bg-white overflow-hidden">
+    <div class="container px-4 mx-auto">
+      <h1
+        class="mb-4 text-6xl md:text-7xl text-center font-bold font-heading tracking-px-n leading-tight">
+        Latest from {pageName}'s Blog
+      </h1>
+      <p
+        class="mb-24 font-medium text-gray-600 text-center leading-relaxed md:max-w-lg mx-auto">
+        {description}
+      </p>
+
+      <div
+        class="px-5 md:text-left text-center md:px-16 grid grid-cols-1 md:grid-cols-3 gap-y-12 md:gap-y-20 gap-x-10 -m-3">
+        {blogs.map((blog) => <BlogCard blog={blog} />)}
+      </div>
+    </div>
+  </section>
+</Layout>

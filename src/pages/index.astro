@@ -1,11 +1,99 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import BlogCard from "../components/BlogCard.astro";
+import Layout from "../layouts/Layout.astro";
+import { getAllPosts } from "../services/notion";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const blogs = await getAllPosts();
 ---
 
 <Layout>
-	<Welcome />
+  <section
+    class="py-28 bg-black bg-no-repeat bg-center bg-cover bg-fixed overflow-hidden"
+    style={{ backgroundImage: `url(${blogs[0].coverImage[0]})` }}>
+    <div class="container px-4 mx-auto">
+      <div
+        class="px-12 pt-12 pb-9 md:max-w-xl bg-black bg-opacity-70 rounded-3xl"
+        style={{ backdropFilter: "blur(10px)" }}>
+        <div
+          class="mb-7 font-sans max-w-max text-white font-semibold flex flex-wrap flex-row gap-3">
+          {
+            blogs[0].tags &&
+              blogs[0]?.tags?.map((tag) => (
+                <a
+                  href={`/tags/${tag.id}`}
+                  class="px-3 py-1.5 text-sm uppercase border border-gray-700 rounded-md">
+                  {tag.name}
+                </a>
+              ))
+          }
+        </div>
+        <h1
+          class="mb-4 text-6xl md:text-7xl text-white font-bold font-heading tracking-px-n leading-tight">
+          {blogs[0].title}
+        </h1>
+        <p class="mb-11 text-lg text-gray-400 font-medium leading-normal">
+          {blogs[0]["AI summary"]}
+        </p>
+        <a
+          class="inline-flex flex-wrap items-center text-white hover:text-gray-200"
+          href={`/${blogs[0].slug}`}>
+          <span class="mr-2 font-semibold leading-normal">
+            Read Full Article
+          </span>
+          <svg
+            width="19"
+            height="18"
+            viewBox="0 0 19 18"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M11 3.75L16.25 9M16.25 9L11 14.25M16.25 9L2.75 9"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+  <section class="p-12 md:pt-32 md:pb-24 md:px-24 bg-white overflow-hidden">
+    <div
+      class="grid grid-cols-1 md:grid-cols-3 gap-y-12 md:gap-y-20 gap-x-12 -m-3">
+      {/* {blogs.slice(1).map((blog) => ( */}
+      {blogs.map((blog) => <BlogCard blog={blog} />)}
+      <div class="w-full md:p-8 md:col-span-2">
+        <div class="flex flex-col justify-between h-full">
+          <div class="mb-8">
+            <h2
+              class="mb-5 text-6xl md:text-7xl font-bold font-heading tracking-px-n leading-tight">
+              Our Latest Blogs and Articles
+            </h2>
+            <p class="text-gray-600 font-medium leading-relaxed">
+              Write smarter, not harder with our AI-powered writing assistant.
+              Elevate your writing game and save time with every keystroke.
+            </p>
+          </div>
+          <a
+            class="inline-flex items-center text-indigo-600 hover:text-indigo-700 leading-normal"
+            href="/all">
+            <span class="mr-2 font-medium">See all articles</span>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M10.5 3.75L15.75 9M15.75 9L10.5 14.25M15.75 9L2.25 9"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
 </Layout>

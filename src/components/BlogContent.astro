@@ -1,0 +1,229 @@
+---
+import "../assets/css/blog.css";
+import "../assets/css/toc.css";
+import { cn } from "../services/utils";
+import type { BlogPost } from "@prkedia81/notion-blogs";
+
+interface Props {
+  post: BlogPost;
+}
+
+const { post } = Astro.props;
+
+// Move these to a utils file if needed across components
+const formatDate = (date: string) => {
+  return new Date(date).toLocaleDateString("en-IN", {
+    year: "numeric",
+    month: "long",
+    day: "2-digit",
+  });
+};
+---
+
+<section
+  class="py-8 md:py-12 bg-white"
+  style={{
+    backgroundImage: "url(/images/pattern-white.svg)",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center top",
+  }}>
+  <div class="container px-8 md:px-12 mx-auto">
+    {/* HEADER Portion */}
+    <div
+      class="flex flex-col md:flex-row justify-around lg:items-center mb-12 -mx-4">
+      <div
+        class="text-center md:text-left order-2 md:order-1 w-full md:max-w-lg px-4">
+        <div
+          class="hidden lg:flex mb-6 text-xs leading-5 text-indigo-700 font-medium uppercase flex-row gap-2">
+          {
+            post.tags &&
+              post.tags.map((tag) => (
+                <a
+                  href={"/tags/" + tag.slug}
+                  class="py-1 px-3 bg-indigo-100 rounded-full shadow-sm">
+                  {tag.name}
+                </a>
+              ))
+          }
+        </div>
+        <h1
+          class="mb-4 text-3xl md:text-4xl lg:text-5xl leading-tight text-darkCoolGray-900 font-bold tracking-tighter">
+          {post.title}
+        </h1>
+        <p
+          class="hidden lg:block mb-6 md:mb-8 text-md md:text-lg font-normal text-coolGray-500">
+          {post.seoDescription}
+        </p>
+        <div
+          class="mb-2 flex md:justify-start gap-2 justify-center items-center">
+          {
+            post.author.map((author, index) => (
+              <>
+                <a
+                  href={"/authors/" + author.slug}
+                  class="inline-block text-indigo-600 font-medium">
+                  {author.name}
+                </a>
+                {index !== post.author.length - 1 && (
+                  <span class="text-indigo-500">•</span>
+                )}
+              </>
+            ))
+          }
+          <span class="text-indigo-500">•</span>
+          <p class="inline-block text-indigo-600 font-medium">
+            {formatDate(post.lastEditedDate)}
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="order-1 lg:order-2 w-full md:w-1/2 2xl:w-5/12 px-4 mb-8 md:mb-0">
+        <div
+          class="mx-auto md:ml-0 max-w-max overflow-hidden shadow-md md:shadow-xl rounded-lg">
+          {
+            post.coverImage[0] && (
+              <img
+                width={1000}
+                height={600}
+                src={post.coverImage[0]}
+                class="w-full h-full"
+                alt="Blog Feature Image"
+              />
+            )
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap -mx-4">
+      {/* SCROLLSPY */}
+      <div class="hidden md:block w-4/12 lg:w-3/12 xl:3/12">
+        <div
+          class="toc-box sticky top-24 border p-5 rounded-md text-trueGray-800 text-[15px] border-coolGray-400">
+          <p class="font-bold text-xl pb-2">Table of Contents</p>
+          <div
+            class="pb-6 mb-3 border-b border-coolGray-100 toc js-toc z-1 transition--300">
+          </div>
+          <div class="flex items-center">
+            <button
+              id="copy-link"
+              class="inline-flex mr-4 items-center justify-center py-2 px-4 text-trueGray-600 border border-coolGray-200 hover:border-coolGray-500 rounded-md shadow-md transition duration-200">
+              <svg
+                width="20"
+                height="16"
+                viewBox="0 0 20 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M15 13.8333H5C4.33696 13.8333 3.70108 13.5699 3.23224 13.1011C2.76339 12.6323 2.5 11.9964 2.5 11.3333V4.66667C2.5 4.44565 2.41221 4.23369 2.25592 4.07741C2.09964 3.92113 1.88768 3.83333 1.66667 3.83333C1.44566 3.83333 1.23369 3.92113 1.07741 4.07741C0.921133 4.23369 0.833336 4.44565 0.833336 4.66667V11.3333C0.833336 12.4384 1.27232 13.4982 2.05372 14.2796C2.44063 14.6665 2.89996 14.9734 3.40549 15.1828C3.91101 15.3922 4.45283 15.5 5 15.5H15C15.221 15.5 15.433 15.4122 15.5893 15.2559C15.7455 15.0996 15.8333 14.8877 15.8333 14.6667C15.8333 14.4457 15.7455 14.2337 15.5893 14.0774C15.433 13.9211 15.221 13.8333 15 13.8333ZM19.1667 6.28333C19.158 6.20678 19.1412 6.13136 19.1167 6.05833V5.98333C19.0766 5.89765 19.0232 5.81889 18.9583 5.75V5.75L13.9583 0.75C13.8894 0.68518 13.8107 0.631734 13.725 0.591667H13.65L13.3833 0.5H6.66667C6.00363 0.5 5.36774 0.763392 4.8989 1.23223C4.43006 1.70107 4.16667 2.33696 4.16667 3V9.66667C4.16667 10.3297 4.43006 10.9656 4.8989 11.4344C5.36774 11.9033 6.00363 12.1667 6.66667 12.1667H16.6667C17.3297 12.1667 17.9656 11.9033 18.4344 11.4344C18.9033 10.9656 19.1667 10.3297 19.1667 9.66667V6.33333C19.1667 6.33333 19.1667 6.33333 19.1667 6.28333ZM14.1667 3.34167L16.325 5.5H15C14.779 5.5 14.567 5.4122 14.4107 5.25592C14.2545 5.09964 14.1667 4.88768 14.1667 4.66667V3.34167ZM17.5 9.66667C17.5 9.88768 17.4122 10.0996 17.2559 10.2559C17.0996 10.4122 16.8877 10.5 16.6667 10.5H6.66667C6.44565 10.5 6.23369 10.4122 6.07741 10.2559C5.92113 10.0996 5.83334 9.88768 5.83334 9.66667V3C5.83334 2.77899 5.92113 2.56702 6.07741 2.41074C6.23369 2.25446 6.44565 2.16667 6.66667 2.16667H12.5V4.66667C12.5 5.32971 12.7634 5.96559 13.2322 6.43443C13.7011 6.90327 14.337 7.16667 15 7.16667H17.5V9.66667Z"
+                  fill="currentColor"></path>
+              </svg>
+              <span class="ml-2 text-sm text-trueGray-600 font-medium">
+                Copy Blog Link
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* CONTENT */}
+      <div
+        id="blog-content"
+        class="w-full md:flex-1 px-4 md:pl-16 md:pr-12 lg:pl-32 lg:pr-16 js-toc-content">
+        {/* BLOG CONTENT */}
+        <div class="blog" set:html={post.content} />
+
+        {/* AUTHOR DATA */}
+        <div class="border-t mt-12 flex flex-col gap-2">
+          {
+            post.author.map((author, index) => (
+              <div class="flex items-center -mx-2 p-2 gap-5">
+                {author.image[0] ? (
+                  <div class="max-w-24 max-h-24 rounded-full overflow-hidden relative">
+                    <img
+                      width={400}
+                      height={400}
+                      class="h-auto w-full rounded-full"
+                      src={author.image[0]}
+                      alt={`author ${index + 1}`}
+                    />
+                  </div>
+                ) : (
+                  <div
+                    class={cn(
+                      "w-24 h-auto rounded-full overflow-hidden relative",
+                      [
+                        "bg-gradient-purple",
+                        "bg-gradient-purple2",
+                        "bg-gradient-red",
+                        "bg-gradient-cyan",
+                        "bg-gradient-blue",
+                        "bg-gradient-green",
+                        "bg-gradient-yellow",
+                        "bg-gradient-orange",
+                      ][Math.floor(Math.random() * 8)]
+                    )}
+                  />
+                )}
+                <div class="w-full">
+                  <a
+                    href={"/authors/" + author.slug}
+                    class="text-base md:text-2xl font-extrabold text-coolGray-800 hover:text-coolGray-900">
+                    {author.name}
+                  </a>
+                  <p class="max-w-2xl mt-2 text-sm md:text-md text-coolGray-500">
+                    {author.bio}
+                  </p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import * as tocbot from "tocbot";
+
+  // Initialize tocbot
+  tocbot.init({
+    tocSelector: ".js-toc",
+    contentSelector: ".js-toc-content",
+    headingSelector: "h1, h2, h3",
+    ignoreSelector: ".js-toc-ignore",
+    hasInnerContainers: true,
+    linkClass: "toc-link",
+    extraLinkClasses: "",
+    activeLinkClass: "is-active-link",
+    listClass: "toc-list",
+    extraListClasses: "",
+    isCollapsedClass: "is-collapsed",
+    collapsibleClass: "is-collapsible",
+    listItemClass: "toc-list-item",
+    collapseDepth: 4,
+    scrollSmooth: true,
+    scrollSmoothDuration: 420,
+    headingsOffset: 200,
+    throttleTimeout: 50,
+    positionFixedSelector: null,
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+    includeHtml: false,
+    orderedList: false,
+    scrollContainer: null,
+    skipRendering: false,
+    ignoreHiddenElements: false,
+  });
+
+  // Copy link functionality
+  const copyButton = document.getElementById("copy-link");
+  if (copyButton) {
+    copyButton.addEventListener("click", () => {
+      const url = window.location.href;
+      navigator.clipboard.writeText(url);
+    });
+  }
+</script>

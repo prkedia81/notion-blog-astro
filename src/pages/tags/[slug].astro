@@ -1,0 +1,47 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import BlogCard from "../../components/BlogCard.astro";
+
+// import { getAllTags, getTagPosts } from "@/services/ghost";
+import { getPostsByTag } from "../../services/notion";
+
+// Get static paths for all tags
+// export async function getStaticPaths() {
+//   const allTags = await getAllTags();
+
+//   return allTags.map((tag) => ({
+//     params: { slug: tag.slug },
+//     props: { tag },
+//   }));
+// }
+
+const { slug } = Astro.params;
+
+if (!slug) return Astro.redirect("/404");
+
+const postList = await getPostsByTag(slug);
+
+// Handle 404
+if (!postList || postList.length === 0) {
+  return Astro.redirect("/404");
+}
+
+// Set the page title
+const title = `${slug.split("-").join(" ")} | Manuscript AI`;
+---
+
+<Layout>
+  <section class="pt-12 pb-24 bg-white overflow-hidden">
+    <div class="container px-4 mx-auto">
+      <h1
+        class="mb-24 text-4xl md:text-5xl text-center font-bold font-heading tracking-px-n leading-tight">
+        Blogs from Writee on {slug.split("-").join(" ")}
+      </h1>
+
+      <div
+        class="px-5 md:text-left text-center md:px-16 grid grid-cols-1 md:grid-cols-3 gap-y-12 md:gap-y-20 gap-x-10 -m-3">
+        {postList.map((post) => <BlogCard blog={post} />)}
+      </div>
+    </div>
+  </section>
+</Layout>
