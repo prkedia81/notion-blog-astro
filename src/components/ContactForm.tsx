@@ -1,5 +1,5 @@
 import LoadingSpinner from "../components/LoadingSpinner.astro";
-import SuccessToast from "../components/SuccessToast";
+import SuccessToast from "./SuccessToast";
 import { MailIcon, PhoneIcon } from "@heroicons/react/outline";
 import React, { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
