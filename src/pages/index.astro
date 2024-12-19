@@ -3,6 +3,8 @@ import BlogCard from "../components/BlogCard.astro";
 import Layout from "../layouts/Layout.astro";
 import { getAllPosts } from "../services/notion";
 
+const id = import.meta.env.MONGO_DB_ID;
+
 const blogs = await getAllPosts();
 ---
 
@@ -73,6 +75,8 @@ const blogs = await getAllPosts();
               Write smarter, not harder with our AI-powered writing assistant.
               Elevate your writing game and save time with every keystroke.
             </p>
+            <!-- TODO: Remove this  -->
+            <p>{id}</p>
           </div>
           <a
             class="inline-flex items-center text-indigo-600 hover:text-indigo-700 leading-normal"
