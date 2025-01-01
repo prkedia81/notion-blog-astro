@@ -7,6 +7,7 @@
 3. Add every possible on-page SEO thing in this
 4. More blogs like this
 5. Similar links etc add
+   // "@prkedia81/notion-blogs": "^0.0.1",
 
 ## 🧞 Commands
 
