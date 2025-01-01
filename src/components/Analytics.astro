@@ -1,10 +1,18 @@
+---
+import { getWebsite } from "../services/website";
+
+const website = await getWebsite();
+---
+
 <>
-  {/* TODO: Add Analytics Codes */}
   {
-    /* <meta
-        name="google-site-verification"
-        content="w8Kqb8BWZkc2ZTOn_sTgDbK0IdpN9zpU4-4Q21T037s"
-      /> */
+    website.websiteContent.scripts[0]?.script !== "" && (
+      <>
+        {website.websiteContent.scripts.map((scriptObj) => (
+          <Fragment set:html={scriptObj.script} />
+        ))}
+      </>
+    )
   }
   {
     /* <script src="https://www.googletagmanager.com/gtag/js?id=G-5PLFK4MDC7" />

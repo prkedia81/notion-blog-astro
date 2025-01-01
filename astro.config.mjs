@@ -14,27 +14,26 @@ export default defineConfig({
       SMTP_PASSWORD: envField.string({ context: "server", access: "secret" }),
       MONGO_URI: envField.string({ context: "server", access: "secret" }),
       MONGO_DB_ID: envField.string({ context: "server", access: "public" }),
-      APP_URL: envField.string({ context: "server", access: "public" }),
-      NOTION_KEY: envField.string({
-        context: "server",
-        access: "secret",
-        optional: true,
-      }),
-      NOTION_BLOG_ID: envField.string({
-        context: "server",
-        access: "public",
-        optional: true,
-      }),
-      NOTION_TAG_ID: envField.string({
-        context: "server",
-        access: "public",
-        optional: true,
-      }),
-      NOTION_AUTHOR_ID: envField.string({
-        context: "server",
-        access: "public",
-        optional: true,
-      }),
+      // NOTION_KEY: envField.string({
+      //   context: "server",
+      //   access: "secret",
+      //   optional: true,
+      // }),
+      // NOTION_BLOG_ID: envField.string({
+      //   context: "server",
+      //   access: "public",
+      //   optional: true,
+      // }),
+      // NOTION_TAG_ID: envField.string({
+      //   context: "server",
+      //   access: "public",
+      //   optional: true,
+      // }),
+      // NOTION_AUTHOR_ID: envField.string({
+      //   context: "server",
+      //   access: "public",
+      //   optional: true,
+      // }),
     },
   },
   integrations: [react(), tailwind()],

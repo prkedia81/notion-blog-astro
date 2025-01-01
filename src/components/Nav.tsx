@@ -1,12 +1,50 @@
 import { useState } from "react";
 
-const navigationLinks = [
-  { href: "/all", label: "All Blogs" },
-  { href: "/contact", label: "Contact" },
-];
+interface NavProps {
+  websiteContent: {
+    about: {
+      websiteName: string;
+      homepageLink?: string;
+    };
+    contact?: {
+      contactPageLink?: string;
+    };
+    ctaLinks: {
+      signInText?: string;
+      signInLink?: string;
+      signUpText?: string;
+      signUpLink?: string;
+    };
+  };
+}
 
-export default function Nav() {
+export default function Nav({ websiteContent }: NavProps) {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const navigationLinks = [{ href: "/all", label: "All Blogs" }];
+
+  const ctaLinks = [];
+  if (
+    websiteContent.ctaLinks.signInText &&
+    websiteContent.ctaLinks.signInLink
+  ) {
+    ctaLinks.push({
+      text: websiteContent.ctaLinks.signInText,
+      href: websiteContent.ctaLinks.signInLink,
+      isPrimary: false,
+    });
+  }
+
+  if (
+    websiteContent.ctaLinks.signUpText &&
+    websiteContent.ctaLinks.signUpLink
+  ) {
+    ctaLinks.push({
+      text: websiteContent.ctaLinks.signUpText,
+      href: websiteContent.ctaLinks.signUpLink,
+      isPrimary: true,
+    });
+  }
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
@@ -20,14 +58,10 @@ export default function Nav() {
           <div className="w-auto">
             <div className="flex flex-wrap items-center">
               <div className="w-24 md:w-24 md:mr-14">
-                <a href="/">
-                  <img
-                    src="/globe.svg"
-                    alt=""
-                    className="w-16 h-auto"
-                    width={1000}
-                    height={1000}
-                  />
+                <a href={websiteContent.about.homepageLink || "/"}>
+                  <h1 className="text-2xl font-bold">
+                    {websiteContent.about.websiteName}
+                  </h1>
                 </a>
               </div>
               <div className="w-auto hidden lg:block">
@@ -47,23 +81,24 @@ export default function Nav() {
             <div className="flex flex-wrap items-center">
               <div className="w-auto hidden lg:block">
                 <div className="flex flex-wrap">
-                  <div className="w-auto">
-                    <a
-                      href="https://app.writee.in/signin"
-                      className="font-heading block py-2 px-5 mr-5 text-lg text-gray-900 hover:text-indigo-800 rounded-lg">
-                      Login
-                    </a>
-                  </div>
-                  <div className="w-auto">
-                    <a href="https://app.writee.in/signup">
-                      <button className="group relative font-heading block py-2 px-5 text-lg text-gray-900 border-2 border-gray-900 overflow-hidden rounded-lg">
-                        <div className="absolute top-0 left-0 transform -translate-y-full group-hover:-translate-y-0 h-full w-full bg-gray-900 transition ease-in-out duration-500"></div>
-                        <p className="relative z-10 group-hover:text-white">
-                          Try for free
-                        </p>
-                      </button>
-                    </a>
-                  </div>
+                  {ctaLinks.map((link, index) => (
+                    <div key={index} className="w-auto">
+                      <a href={link.href}>
+                        {link.isPrimary ? (
+                          <button className="group relative font-heading block py-2 px-5 text-lg text-gray-900 border-2 border-gray-900 overflow-hidden rounded-lg">
+                            <div className="absolute top-0 left-0 transform -translate-y-full group-hover:-translate-y-0 h-full w-full bg-gray-900 transition ease-in-out duration-500"></div>
+                            <p className="relative z-10 group-hover:text-white">
+                              {link.text}
+                            </p>
+                          </button>
+                        ) : (
+                          <span className="font-heading block py-2 px-5 mr-5 text-lg text-gray-900 hover:text-indigo-800 rounded-lg">
+                            {link.text}
+                          </span>
+                        )}
+                      </a>
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="w-auto lg:hidden">
@@ -102,13 +137,9 @@ export default function Nav() {
                 <div className="w-full">
                   <div className="flex items-center justify-between -mx-8">
                     <a href="/">
-                      <img
-                        src="/globe.svg"
-                        alt=""
-                        className="w-12 h-auto"
-                        width={1000}
-                        height={100}
-                      />
+                      <h1 className="text-2xl font-bold">
+                        {websiteContent.about.websiteName}
+                      </h1>
                     </a>
                     <div className="w-auto p-2">
                       <button
@@ -134,7 +165,7 @@ export default function Nav() {
                 <div className="flex flex-col py-8 w-full">
                   <ul>
                     {navigationLinks.map((link) => (
-                      <li className="mb-8">
+                      <li key={link.href} className="mb-8">
                         <a
                           className="font-heading font-medium text-lg text-gray-900 hover:text-gray-700"
                           href={link.href}>
@@ -146,25 +177,30 @@ export default function Nav() {
                 </div>
                 <div className="flex flex-col justify-end w-full">
                   <div className="flex flex-wrap">
-                    <div className="w-full">
-                      <a
-                        href="https://app.writee.in/signin"
-                        className="p-0.5 font-heading block w-full text-lg text-gray-900 font-medium rounded-lg">
-                        <div className="py-2 px-5 rounded-10">
-                          <p>Login</p>
-                        </div>
-                      </a>
-                    </div>
-                    <div className="w-full">
-                      <a
-                        href="https://app.writee.in/signup"
-                        className="group relative p-0.5 font-heading block w-full text-lg text-gray-900 font-medium bg-gradient-cyan overflow-hidden rounded-lg">
-                        <div className="absolute top-0 left-0 transform -translate-y-full group-hover:-translate-y-0 h-full w-full bg-gradient-cyan transition ease-in-out duration-500"></div>
-                        <div className="py-2 px-5 bg-white rounded-lg">
-                          <p className=" relative z-10">Try for free</p>
-                        </div>
-                      </a>
-                    </div>
+                    {ctaLinks.map((link, index) => (
+                      <div key={index} className="w-full">
+                        <a
+                          href={link.href}
+                          className={`p-0.5 font-heading block w-full text-lg text-gray-900 font-medium rounded-lg ${
+                            link.isPrimary
+                              ? "group relative bg-gradient-cyan overflow-hidden"
+                              : ""
+                          }`}>
+                          {link.isPrimary ? (
+                            <>
+                              <div className="absolute top-0 left-0 transform -translate-y-full group-hover:-translate-y-0 h-full w-full bg-gradient-cyan transition ease-in-out duration-500"></div>
+                              <div className="py-2 px-5 bg-white rounded-lg">
+                                <p className="relative z-10">{link.text}</p>
+                              </div>
+                            </>
+                          ) : (
+                            <div className="py-2 px-5 rounded-10">
+                              <p>{link.text}</p>
+                            </div>
+                          )}
+                        </a>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>

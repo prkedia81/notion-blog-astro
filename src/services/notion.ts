@@ -1,22 +1,56 @@
 import { NotionBlog } from "@prkedia81/notion-blogs";
-import { NOTION_BLOG_ID, NOTION_KEY } from "astro:env/server";
+import { getWebsite } from "./website";
 
-const notionClient = new NotionBlog({
-  notionKey: NOTION_KEY,
-  blogDatabaseId: NOTION_BLOG_ID,
-});
+let notionClient: NotionBlog | null = null;
+
+async function getNotionClient() {
+  if (!notionClient) {
+    const website = await getWebsite();
+    const notionKey = website.notionCredentials.notionKey;
+    const blogDatabaseId = website.notionCredentials.blogsDbId.replace(
+      /(.{8})(.{4})(.{4})(.{4})(.{12})/,
+      "$1-$2-$3-$4-$5"
+    );
+    const tagDatabaseId = website.notionCredentials.tagsDbId
+      ? website.notionCredentials.tagsDbId.replace(
+          /(.{8})(.{4})(.{4})(.{4})(.{12})/,
+          "$1-$2-$3-$4-$5"
+        )
+      : "";
+    const authorDatabaseId = website.notionCredentials.authorsDbId
+      ? website.notionCredentials.authorsDbId.replace(
+          /(.{8})(.{4})(.{4})(.{4})(.{12})/,
+          "$1-$2-$3-$4-$5"
+        )
+      : "";
+    notionClient = new NotionBlog({
+      notionKey: notionKey.trim(),
+      blogDatabaseId: blogDatabaseId.trim(),
+      tagDatabaseId: tagDatabaseId.trim(),
+      authorDatabaseId: authorDatabaseId.trim(),
+    });
+  }
+  return notionClient;
+}
 
 export async function getAllPosts() {
-  return await notionClient.getAllPosts();
+  const client = await getNotionClient();
+  return await client.getAllPosts();
 }
 
-export async function getBlogBySlug(postSlug: string) {
-  return await notionClient.getBlogBySlug(postSlug);
+export async function getBlogById(postId: string) {
+  const client = await getNotionClient();
+  return await client.getBlogById(postId);
 }
 
-// return all posts realted to tag slug
 export async function getPostsByTag(tagSlug: string) {
-  return await notionClient.getPostsByTag(tagSlug);
+  const client = await getNotionClient();
+  return await client.getPostsByTag(tagSlug);
+}
+
+export async function getPostsByAuthor(authorSlug: string) {
+  const client = await getNotionClient();
+  return await client.getPostsByAuthor(authorSlug);
 }
 
 // TODO: Add this
@@ -24,11 +58,6 @@ export async function getPostsByTag(tagSlug: string) {
 // export async function getAllTags() {
 //   return await notionClient.getAllTags();
 // }
-
-// get author related posts
-export async function getPostsByAuthor(authorSlug: string) {
-  return await notionClient.getPostsByAuthor(authorSlug);
-}
 
 // TODO: Add this
 // get All author from Ghost CMS for generateStaticParams

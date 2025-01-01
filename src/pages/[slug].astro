@@ -1,17 +1,25 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import BlogContent from "../components/BlogContent.astro";
-import { getAllPosts, getBlogBySlug } from "../services/notion";
+import { getAllPosts, getBlogById } from "../services/notion";
+import { getWebsite } from "../services/website";
 
 // Get static paths for all blog posts
 export async function getStaticPaths() {
   const posts = await getAllPosts();
   const mappedPosts = await Promise.all(
     posts.map(async (post) => {
-      const fullPost = await getBlogBySlug(post.slug);
+      const fullPost = await getBlogById(post.ID.toString());
+      if (fullPost === null) {
+        return undefined;
+      }
       return {
-        params: { slug: post.slug },
-        props: { post: fullPost },
+        params: {
+          slug: post.slug,
+        },
+        props: {
+          post: fullPost,
+        },
       };
     })
   );
@@ -25,13 +33,16 @@ if (!post) {
   Astro.redirect("/404");
 }
 
+const website = await getWebsite();
+
 // Get metadata for the page
-// const tags = post?.tags?.map((item) => item.name) || [];
-// const title = `${post.title} | Manuscript AI`;
-// const ogImage = post.feature_image ?? null;
+const tags = post?.tags?.map((item) => item.name) || [];
+const title = `${post?.title} | ${website.websiteContent.about.websiteName}`;
+const description = post?.seoDescription || post?.["AI summary"] || "";
+const ogImage = post?.coverImage[0] || null;
 ---
 
-<Layout>
+<Layout title={title} description={description} ogImage={ogImage || ""}>
   <main class="container mx-auto px-4 py-8">
     {post ? <BlogContent post={post} /> : <p>Post not found.</p>}
   </main>

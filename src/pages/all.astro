@@ -2,10 +2,13 @@
 import BlogCard from "../components/BlogCard.astro";
 import { getAllPosts } from "../services/notion";
 import Layout from "../layouts/Layout.astro";
+import { getWebsite } from "../services/website";
 
-const pageName = "Manuscript AI";
-const description =
-  "Write smarter, not harder with our AI-powered writing assistant. Elevate your writing game and save time with every keystroke.";
+const website = await getWebsite();
+
+const pageName = website.websiteContent.about.websiteName;
+const description = website.websiteContent.about.aboutWebsite;
+
 const blogs = await getAllPosts();
 ---
 
@@ -14,7 +17,7 @@ const blogs = await getAllPosts();
     <div class="container px-4 mx-auto">
       <h1
         class="mb-4 text-6xl md:text-7xl text-center font-bold font-heading tracking-px-n leading-tight">
-        Latest from {pageName}'s Blog
+        Latest from {pageName}
       </h1>
       <p
         class="mb-24 font-medium text-gray-600 text-center leading-relaxed md:max-w-lg mx-auto">

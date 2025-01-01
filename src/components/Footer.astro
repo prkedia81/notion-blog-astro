@@ -1,10 +1,9 @@
 ---
+import { getWebsite } from "../services/website";
+
+const website = await getWebsite();
+
 const navigation = {
-  main: [
-    { name: "Terms & Conditions", href: "/tnc" },
-    { name: "Privacy Policy", href: "/privacy-policy" },
-    { name: "Refund Policy", href: "/refund-policy" },
-  ],
   social: [
     {
       name: "Facebook",
@@ -28,15 +27,37 @@ const navigation = {
   <div class="max-w-7xl mx-auto py-12 px-4 overflow-hidden sm:px-6 lg:px-8">
     <nav class="-mx-5 -my-2 flex flex-wrap justify-center" aria-label="Footer">
       {
-        navigation.main.map((item) => (
+        website.websiteContent.legalLinks.privacyPolicy && (
           <div class="px-5 py-2">
             <a
-              href={item.href}
+              href={website.websiteContent.legalLinks.privacyPolicy}
               class="text-base text-gray-500 hover:text-gray-900">
-              {item.name}
+              Privacy Policy
             </a>
           </div>
-        ))
+        )
+      }
+      {
+        website.websiteContent.legalLinks.tnc && (
+          <div class="px-5 py-2">
+            <a
+              href={website.websiteContent.legalLinks.tnc}
+              class="text-base text-gray-500 hover:text-gray-900">
+              Terms & Conditions
+            </a>
+          </div>
+        )
+      }
+      {
+        website.websiteContent.legalLinks.refundPolicy && (
+          <div class="px-5 py-2">
+            <a
+              href={website.websiteContent.legalLinks.refundPolicy}
+              class="text-base text-gray-500 hover:text-gray-900">
+              Refund Policy
+            </a>
+          </div>
+        )
       }
     </nav>
     {
@@ -53,8 +74,8 @@ const navigation = {
     }
     {/* Whixic Technologies Private Limited */}
     <p class="mt-8 text-center text-base text-gray-400">
-      &copy; {new Date().getFullYear()} Whixic Technologies Private Limited. All
-      rights reserved.
+      &copy; {new Date().getFullYear()}
+      {website.websiteContent.about.websiteName}. All rights reserved.
     </p>
   </div>
 </footer>

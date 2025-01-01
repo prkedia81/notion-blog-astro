@@ -1,6 +1,7 @@
-import { Schema, model, models, Document } from "mongoose";
+import mongoose from "mongoose";
+import type { Document } from "mongoose";
 
-const userSchema = new Schema({
+const userSchema = new mongoose.Schema({
   clerk_id: {
     type: String,
     required: true,
@@ -68,6 +69,6 @@ export interface IUsers extends Document {
   subscriptionId?: string;
 }
 
-const User = models.User || model("User", userSchema);
+const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 export default User;

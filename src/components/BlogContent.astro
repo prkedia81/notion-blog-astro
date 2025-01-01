@@ -135,51 +135,53 @@ const formatDate = (date: string) => {
         <div class="blog" set:html={post.content} />
 
         {/* AUTHOR DATA */}
-        <div class="border-t mt-12 flex flex-col gap-2">
-          {
-            post.author.map((author, index) => (
-              <div class="flex items-center -mx-2 p-2 gap-5">
-                {author.image[0] ? (
-                  <div class="max-w-24 max-h-24 rounded-full overflow-hidden relative">
-                    <img
-                      width={400}
-                      height={400}
-                      class="h-auto w-full rounded-full"
-                      src={author.image[0]}
-                      alt={`author ${index + 1}`}
+        {
+          post.author && post.author.length > 0 && (
+            <div class="border-t mt-12 flex flex-col gap-2">
+              {post.author.map((author, index) => (
+                <div class="flex items-center -mx-2 p-2 gap-5">
+                  {author.image[0] ? (
+                    <div class="max-w-24 max-h-24 rounded-full overflow-hidden relative">
+                      <img
+                        width={400}
+                        height={400}
+                        class="h-auto w-full rounded-full"
+                        src={author.image[0]}
+                        alt={`author ${index + 1}`}
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      class={cn(
+                        "w-24 h-auto rounded-full overflow-hidden relative",
+                        [
+                          "bg-gradient-purple",
+                          "bg-gradient-purple2",
+                          "bg-gradient-red",
+                          "bg-gradient-cyan",
+                          "bg-gradient-blue",
+                          "bg-gradient-green",
+                          "bg-gradient-yellow",
+                          "bg-gradient-orange",
+                        ][Math.floor(Math.random() * 8)]
+                      )}
                     />
+                  )}
+                  <div class="w-full">
+                    <a
+                      href={"/authors/" + author.slug}
+                      class="text-base md:text-2xl font-extrabold text-coolGray-800 hover:text-coolGray-900">
+                      {author.name}
+                    </a>
+                    <p class="max-w-2xl mt-2 text-sm md:text-md text-coolGray-500">
+                      {author.bio}
+                    </p>
                   </div>
-                ) : (
-                  <div
-                    class={cn(
-                      "w-24 h-auto rounded-full overflow-hidden relative",
-                      [
-                        "bg-gradient-purple",
-                        "bg-gradient-purple2",
-                        "bg-gradient-red",
-                        "bg-gradient-cyan",
-                        "bg-gradient-blue",
-                        "bg-gradient-green",
-                        "bg-gradient-yellow",
-                        "bg-gradient-orange",
-                      ][Math.floor(Math.random() * 8)]
-                    )}
-                  />
-                )}
-                <div class="w-full">
-                  <a
-                    href={"/authors/" + author.slug}
-                    class="text-base md:text-2xl font-extrabold text-coolGray-800 hover:text-coolGray-900">
-                    {author.name}
-                  </a>
-                  <p class="max-w-2xl mt-2 text-sm md:text-md text-coolGray-500">
-                    {author.bio}
-                  </p>
                 </div>
-              </div>
-            ))
-          }
-        </div>
+              ))}
+            </div>
+          )
+        }
       </div>
     </div>
   </div>

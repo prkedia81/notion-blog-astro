@@ -1,9 +1,12 @@
+import { MONGO_DB_ID } from "astro:env/server";
+import type { IWebsite } from "../model/Website";
+import Website from "../model/Website";
 import connectMongo from "./mongoConnect";
 
-// export async function getWebsiteFromId(id: string): Promise<IWebsite> {
-//   // TODO: Add error handling
-//   await connectMongo();
-//   const website = (await Website.findById(id)) as IWebsite;
+export async function getWebsite(): Promise<IWebsite> {
+  // TODO: Add error handling
+  await connectMongo();
+  const website = (await Website.findById(MONGO_DB_ID)) as IWebsite;
 
-//   return website;
-// }
+  return website;
+}

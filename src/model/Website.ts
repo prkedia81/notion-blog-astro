@@ -1,4 +1,5 @@
-import { Schema, model, models, Document } from "mongoose";
+import mongoose from "mongoose";
+import type { Document } from "mongoose";
 
 export interface IWebsite extends Document {
   userClerkId: string;
@@ -8,6 +9,7 @@ export interface IWebsite extends Document {
     blogsDbId: string;
     tagsDbId: string;
     authorsDbId: string;
+    notionBotId: string;
   };
   websiteContent: {
     about: {
@@ -38,6 +40,7 @@ export interface IWebsite extends Document {
     }[];
   };
   url: {
+    userDesiredUrl?: string;
     userFacingUrl?: string;
     userUrl?: string;
     cloudFrontUrl?: string;
@@ -62,10 +65,9 @@ export interface IWebsite extends Document {
     | "deploying"
     | "failed";
   createdAt: Date;
-  updatedAt: Date;
 }
 
-const websiteSchema = new Schema<IWebsite>(
+const websiteSchema = new mongoose.Schema<IWebsite>(
   {
     userClerkId: {
       type: String,
@@ -77,6 +79,10 @@ const websiteSchema = new Schema<IWebsite>(
     },
     notionCredentials: {
       notionKey: {
+        type: String,
+        default: "",
+      },
+      notionBotId: {
         type: String,
         default: "",
       },
@@ -174,6 +180,10 @@ const websiteSchema = new Schema<IWebsite>(
       },
     },
     url: {
+      userDesiredUrl: {
+        type: String,
+        default: "",
+      },
       userFacingUrl: {
         type: String,
         default: "",
@@ -223,7 +233,6 @@ const websiteSchema = new Schema<IWebsite>(
         default: "",
       },
     },
-    // TODO: Add Analytics
     status: {
       type: String,
       default: "offline",
@@ -240,6 +249,7 @@ const websiteSchema = new Schema<IWebsite>(
   { timestamps: true }
 );
 
-const Website = models.Website || model("Website", websiteSchema);
+const Website =
+  mongoose.models.Website || mongoose.model<IWebsite>("Website", websiteSchema);
 
 export default Website;

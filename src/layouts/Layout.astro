@@ -2,6 +2,17 @@
 import Analytics from "../components/Analytics.astro";
 import Footer from "../components/Footer.astro";
 import Nav from "../components/Nav";
+import { getWebsite } from "../services/website";
+
+const website = await getWebsite();
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const { title, description, ogImage } = Astro.props;
 ---
 
 <!doctype html>
@@ -11,13 +22,16 @@ import Nav from "../components/Nav";
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>Astro Basics</title>
+    <title>{title || website.websiteContent.about.websiteName}</title>
   </head>
   <body>
-    <Analytics />
-    <Nav client:load />
+    <Analytics website={website} />
+    <Nav
+      client:load
+      websiteContent={JSON.parse(JSON.stringify(website.websiteContent))}
+    />
     <slot />
-    <Footer />
+    <Footer website={website} />
   </body>
 
   <style>

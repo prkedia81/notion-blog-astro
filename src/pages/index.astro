@@ -2,8 +2,11 @@
 import BlogCard from "../components/BlogCard.astro";
 import Layout from "../layouts/Layout.astro";
 import { getAllPosts } from "../services/notion";
+import { getWebsite } from "../services/website";
 
 const id = import.meta.env.MONGO_DB_ID;
+
+const website = await getWebsite();
 
 const blogs = await getAllPosts();
 ---
@@ -72,11 +75,8 @@ const blogs = await getAllPosts();
               Our Latest Blogs and Articles
             </h2>
             <p class="text-gray-600 font-medium leading-relaxed">
-              Write smarter, not harder with our AI-powered writing assistant.
-              Elevate your writing game and save time with every keystroke.
+              {website.websiteContent.about.aboutWebsite}
             </p>
-            <!-- TODO: Remove this  -->
-            <p>{id}</p>
           </div>
           <a
             class="inline-flex items-center text-indigo-600 hover:text-indigo-700 leading-normal"
