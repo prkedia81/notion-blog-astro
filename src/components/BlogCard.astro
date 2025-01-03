@@ -1,5 +1,6 @@
 ---
 import type { BlogPost } from "@prkedia81/notion-blogs";
+import { Image } from "astro-preload/components";
 
 interface BlogCardProps {
   blog: BlogPost;
@@ -10,9 +11,9 @@ const { blog } = Astro.props as BlogCardProps;
 
 <a class="md:max-w-sm mx-auto group" href={`/${blog.slug}`}>
   <div class="mb-2 md:mb-6 max-w-max overflow-hidden rounded-xl">
-    <img
-      class="transform hover:scale-105 transition ease-in-out duration-1000"
-      src={blog.coverImage[0] || ""}
+    <Image
+      class="w-full h-full transform hover:scale-105 transition ease-in-out duration-1000"
+      url={blog.coverImage[0] || ""}
       alt=""
     />
   </div>

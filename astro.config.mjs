@@ -4,6 +4,10 @@ import { defineConfig, envField } from "astro/config";
 import react from "@astrojs/react";
 
 import tailwind from "@astrojs/tailwind";
+import prefetch from "@astrojs/prefetch";
+import sitemap from "@astrojs/sitemap";
+import preload from "astro-preload";
+import compress from "astro-compress";
 
 // https://astro.build/config
 export default defineConfig({
@@ -36,5 +40,14 @@ export default defineConfig({
       // }),
     },
   },
-  integrations: [react(), tailwind()],
+  integrations: [
+    preload(),
+    react(),
+    tailwind(),
+    sitemap(),
+    prefetch({
+      selector: "a[href^='/']",
+    }),
+    compress(),
+  ],
 });

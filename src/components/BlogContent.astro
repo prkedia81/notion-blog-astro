@@ -3,6 +3,8 @@ import "../assets/css/blog.css";
 import "../assets/css/toc.css";
 import { cn } from "../services/utils";
 import type { BlogPost } from "@prkedia81/notion-blogs";
+import BlogText from "./BlogText.astro";
+import { Image } from "astro-preload/components";
 
 interface Props {
   post: BlogPost;
@@ -83,10 +85,10 @@ const formatDate = (date: string) => {
           class="mx-auto md:ml-0 max-w-max overflow-hidden shadow-md md:shadow-xl rounded-lg">
           {
             post.coverImage[0] && (
-              <img
+              <Image
                 width={1000}
                 height={600}
-                src={post.coverImage[0]}
+                url={post.coverImage[0]}
                 class="w-full h-full"
                 alt="Blog Feature Image"
               />
@@ -129,10 +131,9 @@ const formatDate = (date: string) => {
 
       {/* CONTENT */}
       <div
-        id="blog-content"
         class="w-full md:flex-1 px-4 md:pl-16 md:pr-12 lg:pl-32 lg:pr-16 js-toc-content">
         {/* BLOG CONTENT */}
-        <div class="blog" set:html={post.content} />
+        <BlogText content={post.content || ""} />
 
         {/* AUTHOR DATA */}
         {
@@ -142,11 +143,11 @@ const formatDate = (date: string) => {
                 <div class="flex items-center -mx-2 p-2 gap-5">
                   {author.image[0] ? (
                     <div class="max-w-24 max-h-24 rounded-full overflow-hidden relative">
-                      <img
+                      <Image
                         width={400}
                         height={400}
                         class="h-auto w-full rounded-full"
-                        src={author.image[0]}
+                        url={author.image[0]}
                         alt={`author ${index + 1}`}
                       />
                     </div>

@@ -1,0 +1,66 @@
+---
+import { Image } from "astro-preload/components";
+import { parseDocument } from "htmlparser2";
+import { DomUtils } from "htmlparser2";
+import type { Element } from "domhandler";
+
+interface Props {
+  content: string;
+}
+
+// Add type for image data
+interface ImageData {
+  url: string;
+  alt: string;
+  attrs: Record<string, string>;
+}
+
+const { content } = Astro.props;
+let images: ImageData[] = [];
+let contentParts: string[] = [];
+
+if (content) {
+  const document = parseDocument(content);
+
+  const extractImages = (node: Element) => {
+    if (node.type === "tag" && node.name === "img") {
+      const { src, alt, ...remainingAttrs } = node.attribs;
+      const imageData: ImageData = {
+        url: src,
+        alt: alt || "",
+        attrs: remainingAttrs,
+      };
+
+      images.push(imageData);
+      node.attribs["data-image-index"] = `${images.length - 1}`;
+      node.name = "astro-image-placeholder";
+    }
+
+    node.children?.forEach((child) => extractImages(child as Element));
+  };
+
+  document.children.forEach((child) => extractImages(child as Element));
+  const transformedHtml = DomUtils.getOuterHTML(document);
+  contentParts = transformedHtml.split(
+    /<astro-image-placeholder[^>]*data-image-index="(\d+)"[^>]*>/
+  );
+}
+---
+
+<div class="blog" id="blog-content">
+  {
+    contentParts.map((part, index) =>
+      index % 2 === 0 ? (
+        <Fragment set:html={part} />
+      ) : (
+        <Image
+          url={images[parseInt(part)].url}
+          alt={images[parseInt(part)].alt}
+          width={1200}
+          height={630}
+          {...images[parseInt(part)].attrs}
+        />
+      )
+    )
+  }
+</div>
