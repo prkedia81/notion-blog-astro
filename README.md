@@ -7,6 +7,7 @@
 3. Add every possible on-page SEO thing in this
 4. More blogs like this
 5. Similar links etc add
+6. Figure out the /blog or something URL structure for the subdirectory hosting?
    // "@prkedia81/notion-blogs": "^0.0.1",
    CHANGE THE notion-blogs package to the latest version
 
