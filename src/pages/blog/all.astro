@@ -1,8 +1,8 @@
 ---
-import BlogCard from "../components/BlogCard.astro";
-import { getAllPosts } from "../services/notion";
-import Layout from "../layouts/Layout.astro";
-import { getWebsite } from "../services/website";
+import BlogCard from "../../components/BlogCard.astro";
+import { getAllPosts } from "../../services/notion";
+import Layout from "../../layouts/Layout.astro";
+import { getWebsite } from "../../services/website";
 
 const website = await getWebsite();
 

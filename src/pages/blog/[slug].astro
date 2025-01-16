@@ -1,8 +1,8 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import BlogContent from "../components/BlogContent.astro";
-import { getAllPosts, getBlogById } from "../services/notion";
-import { getWebsite } from "../services/website";
+import Layout from "../../layouts/Layout.astro";
+import BlogContent from "../../components/BlogContent.astro";
+import { getAllPosts, getBlogById } from "../../services/notion";
+import { getWebsite } from "../../services/website";
 
 // Get static paths for all blog posts
 export async function getStaticPaths() {
