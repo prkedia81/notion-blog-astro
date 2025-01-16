@@ -21,7 +21,7 @@ interface NavProps {
 export default function Nav({ websiteContent }: NavProps) {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navigationLinks = [{ href: "/all", label: "All Blogs" }];
+  const navigationLinks = [{ href: "/blog", label: "All Blogs" }];
 
   const ctaLinks = [];
   if (

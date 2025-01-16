@@ -9,7 +9,7 @@ interface BlogCardProps {
 const { blog } = Astro.props as BlogCardProps;
 ---
 
-<a class="md:max-w-sm mx-auto group" href={`/${blog.slug}`}>
+<a class="md:max-w-sm mx-auto group" href={`/blog/${blog.slug}`}>
   <div class="mb-2 md:mb-6 max-w-max overflow-hidden rounded-xl">
     <Image
       class="w-full h-full transform hover:scale-105 transition ease-in-out duration-1000"
