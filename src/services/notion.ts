@@ -55,12 +55,14 @@ export async function getPostsByAuthor(authorSlug: string) {
 
 // TODO: Add this
 // return all the slugs to build static with generateStaticParams
-// export async function getAllTags() {
-//   return await notionClient.getAllTags();
-// }
+export async function getAllTags() {
+  const client = await getNotionClient();
+  return await client.getAllTags();
+}
 
 // TODO: Add this
 // get All author from Ghost CMS for generateStaticParams
-// export async function getAllAuthors() {
-//   return await notionClient.getAllAuthors();
-// }
+export async function getAllAuthors() {
+  const client = await getNotionClient();
+  return await client.getAllAuthors();
+}

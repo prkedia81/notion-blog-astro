@@ -1,0 +1,35 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getPostsByTag, getAllTags } from "../../services/notion";
+import { getWebsite } from "../../services/website";
+
+export async function getStaticPaths() {
+  const tags = await getAllTags();
+  return tags.map((tag) => ({
+    params: { slug: tag.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const posts = await getPostsByTag(slug);
+console.log(posts);
+const website = await getWebsite();
+const title = `${slug} | ${website.websiteContent.about.websiteName}`;
+const description = `Posts tagged with ${slug}`;
+---
+
+<Layout title={title} description={description}>
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-semibold">Posts tagged with "{slug}"</h1>
+    <ul>
+      {posts.map(post => (
+        <li key={post.ID}>
+          <a href={`/blog/${post.slug}`} class="text-blue-500 hover:underline">
+            {post.title}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </main>
+</Layout>
+
