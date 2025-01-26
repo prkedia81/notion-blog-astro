@@ -1,0 +1,25 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getAllTags } from "../../services/notion";
+import { getWebsite } from "../../services/website";
+
+const tags = await getAllTags();
+const website = await getWebsite();
+const title = `All Tags | ${website.websiteContent.about.websiteName}`;
+const description = `Browse all available tags`;
+---
+
+<Layout title={title} description={description}>
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-semibold">All Tags</h1>
+    <ul>
+      {tags.map(tag => (
+        <li key={tag.slug}>
+          <a href={`/tag/${tag.slug}`} class="text-blue-500 hover:underline">
+            {tag.name}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </main>
+</Layout>

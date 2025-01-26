@@ -1,0 +1,39 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getPostsByAuthor, getAllAuthors } from "../../services/notion";
+import { getWebsite } from "../../services/website";
+
+export async function getStaticPaths() {
+  const authors = await getAllAuthors();
+  return authors.map((author) => ({
+    params: { slug: author.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+let postsData = await getPostsByAuthor(slug);
+let posts = Array.isArray(postsData.filteredBlogs) ? postsData.filteredBlogs : [];
+
+const website = await getWebsite();
+const title = `${slug} | ${website.websiteContent.about.websiteName}`;
+const description = `Posts by ${slug}`;
+---
+
+<Layout title={title} description={description}>
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-semibold">Posts by "{slug}"</h1>
+    <ul>
+      {posts.length > 0 ? (
+        posts.map((post) => (
+          <li key={post.ID.toString()}>
+            <a href={`/blog/${post.slug}`} class="text-blue-500 hover:underline">
+              {post.title}
+            </a>
+          </li>
+        ))
+      ) : (
+        <p>No posts found for this author.</p>
+      )}
+    </ul>
+  </main>
+</Layout>

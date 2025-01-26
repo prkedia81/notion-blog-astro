@@ -1,0 +1,25 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getAllAuthors } from "../../services/notion";
+import { getWebsite } from "../../services/website";
+
+const authors = await getAllAuthors();
+const website = await getWebsite();
+const title = `All Authors | ${website.websiteContent.about.websiteName}`;
+const description = `Browse all available authors`;
+---
+
+<Layout title={title} description={description}>
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-semibold">All Authors</h1>
+    <ul>
+      {authors.map(author => (
+        <li key={author.slug}>
+          <a href={`/author/${author.slug}`} class="text-blue-500 hover:underline">
+            {author.name}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </main>
+</Layout>
