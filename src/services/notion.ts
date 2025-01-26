@@ -38,9 +38,9 @@ export async function getAllPosts() {
   return await client.getAllPosts();
 }
 
-export async function getBlogById(postId: string) {
+export async function getBlogById(postId: string, includeSimilarPosts: boolean = true) {
   const client = await getNotionClient();
-  return await client.getBlogById(postId);
+  return await client.getBlogById(postId, includeSimilarPosts);
 }
 
 export async function getPostsByTag(tagSlug: string) {
